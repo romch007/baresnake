@@ -16,31 +16,29 @@ struct point {
   int y;
 };
 
-struct game_state {
-  struct point snake_body[MAX_BODY_LEN];
-  int snake_body_len;
-  struct point apple;
-  enum direction direction;
-  int score;
-  struct point last_pos;
-};
+struct point snake_body[MAX_BODY_LEN];
+int snake_body_len;
 
-struct game_state game;
+struct point apple;
+struct point last_pos;
+
+enum direction direction;
+int score;
 
 static void grow_snake() {
-  game.snake_body[game.snake_body_len] = game.last_pos;
+  snake_body[snake_body_len] = last_pos;
 
-  game.snake_body_len++;
+  snake_body_len++;
 }
 
 static int check_death() {
-  struct point head = game.snake_body[0];
+  struct point head = snake_body[0];
 
   if ((head.x < 0 || head.x >= VGA_WIDTH) || (head.y < 0 || head.y >= VGA_HEIGHT))
     return 1;
 
-  for (int i = 1; i < game.snake_body_len; i++)
-    if (game.snake_body[i].x == head.x && game.snake_body[i].y == head.y)
+  for (int i = 1; i < snake_body_len; i++)
+    if (snake_body[i].x == head.x && snake_body[i].y == head.y)
       return 1;
 
   return 0;
@@ -49,14 +47,14 @@ static int check_death() {
 void draw_game() {
   terminal_clear_all();
   terminal_set_pos(0, 0);
-  terminal_printf("Score: %d", game.score);
+  terminal_printf("Score: %d", score);
 
   // draw apple
-  terminal_putentryat(APPLE_CHAR, APPLE_COLOR, game.apple.x, game.apple.y);
+  terminal_putentryat(APPLE_CHAR, APPLE_COLOR, apple.x, apple.y);
 
   // draw snake body
-  for (int i = 0; i < game.snake_body_len; i++)
-    terminal_putentryat(SNAKE_BODY_CHAR, SNAKE_BODY_COLOR, game.snake_body[i].x, game.snake_body[i].y);
+  for (int i = 0; i < snake_body_len; i++)
+    terminal_putentryat(SNAKE_BODY_CHAR, SNAKE_BODY_COLOR, snake_body[i].x, snake_body[i].y);
 }
 
 void draw_death_screen() {
@@ -74,63 +72,63 @@ int update_game() {
   if (check_death())
     return 0;
 
-  game.last_pos = game.snake_body[game.snake_body_len - 1];
+  last_pos = snake_body[snake_body_len - 1];
 
-  for (int i = game.snake_body_len - 1; i >= 1; i--) {
-    game.snake_body[i] = game.snake_body[i - 1];
+  for (int i = snake_body_len - 1; i >= 1; i--) {
+    snake_body[i] = snake_body[i - 1];
   }
 
-  switch (game.direction) {
+  switch (direction) {
     case DIRECTION_UP:
-      game.snake_body[0].y -= 1;
+      snake_body[0].y -= 1;
       break;
     case DIRECTION_DOWN:
-      game.snake_body[0].y += 1;
+      snake_body[0].y += 1;
       break;
     case DIRECTION_LEFT:
-      game.snake_body[0].x -= 1;
+      snake_body[0].x -= 1;
       break;
     case DIRECTION_RIGHT:
-      game.snake_body[0].x += 1;
+      snake_body[0].x += 1;
       break;
   }
 
-  if (game.snake_body[0].x == game.apple.x && game.snake_body[0].y == game.apple.y) {
-    game.score++;
+  if (snake_body[0].x == apple.x && snake_body[0].y == apple.y) {
+    score++;
     grow_snake();
 
-    game.apple.x = randrange(VGA_WIDTH);
-    game.apple.y = randrange(VGA_HEIGHT);
+    apple.x = randrange(VGA_WIDTH);
+    apple.y = randrange(VGA_HEIGHT);
   }
 
   return 1;
 }
 
 void start_game() {
-  game.direction = DIRECTION_DOWN;
-  game.score = 0;
+  direction = DIRECTION_DOWN;
+  score = 0;
 
   int middle_x = VGA_WIDTH / 2;
   int middle_y = VGA_HEIGHT / 2;
 
-  game.snake_body[0].x = middle_x;
-  game.snake_body[0].y = middle_y;
-  game.snake_body_len = 1;
+  snake_body[0].x = middle_x;
+  snake_body[0].y = middle_y;
+  snake_body_len = 1;
 
-  game.apple.x = randrange(VGA_WIDTH);
-  game.apple.y = randrange(VGA_HEIGHT);
+  apple.x = randrange(VGA_WIDTH);
+  apple.y = randrange(VGA_HEIGHT);
 
   terminal_clear_all();
 }
 
 void change_direction(enum direction dir) {
-  if ((game.direction == DIRECTION_UP && dir == DIRECTION_DOWN)
-   || (game.direction == DIRECTION_DOWN && dir == DIRECTION_UP)
-   || (game.direction == DIRECTION_LEFT && dir == DIRECTION_RIGHT)
-   || (game.direction == DIRECTION_RIGHT && dir == DIRECTION_LEFT)
+  if ((direction == DIRECTION_UP && dir == DIRECTION_DOWN)
+   || (direction == DIRECTION_DOWN && dir == DIRECTION_UP)
+   || (direction == DIRECTION_LEFT && dir == DIRECTION_RIGHT)
+   || (direction == DIRECTION_RIGHT && dir == DIRECTION_LEFT)
   ) {
     return;
   }
 
-  game.direction = dir;
+  direction = dir;
 }
