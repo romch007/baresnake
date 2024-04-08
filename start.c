@@ -24,9 +24,10 @@ void kmain(void) {
 
   start_game();
 
-  for (;;) {
-    update_game();
+  while (update_game()) {
     draw_game();
     wait_ticks(2);
   }
+
+  draw_death_screen();
 }

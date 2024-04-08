@@ -11,19 +11,17 @@
 #define APPLE_COLOR vga_entry_color(VGA_COLOR_RED, VGA_COLOR_BLACK)
 
 struct point {
-  size_t x;
-  size_t y;
+  int x;
+  int y;
 };
 
 struct game_state {
   struct point snake_body[MAX_BODY_LEN];
-  size_t snake_body_len;
+  int snake_body_len;
   struct point apple;
   enum direction direction;
   int score;
-
   struct point last_pos;
-  int is_dead;
 };
 
 struct game_state game;
@@ -35,15 +33,17 @@ static void grow_snake() {
   game.snake_body_len++;
 }
 
-static void check_death() {
+static int check_death() {
   struct point head = game.snake_body[0];
 
-  if ((0 < head.x || head.x >= VGA_WIDTH) || (0 < head.y || head.y >= VGA_HEIGHT))
-    game.is_dead = 1;
+  if ((head.x < 0 || head.x >= VGA_WIDTH) || (head.y < 0 || head.y >= VGA_HEIGHT))
+    return 1;
 
-  for (size_t i = 1; i < game.snake_body_len; i++)
+  for (int i = 1; i < game.snake_body_len; i++)
     if (game.snake_body[i].x == head.x && game.snake_body[i].y == head.y)
-      game.is_dead = 1;
+      return 1;
+
+  return 0;
 }
 
 void draw_game() {
@@ -53,17 +53,24 @@ void draw_game() {
   terminal_putentryat(APPLE_CHAR, APPLE_COLOR, game.apple.x, game.apple.y);
 
   // draw snake body
-  for (size_t i = 0; i < game.snake_body_len; i++)
+  for (int i = 0; i < game.snake_body_len; i++)
     terminal_putentryat(SNAKE_BODY_CHAR, SNAKE_BODY_COLOR, game.snake_body[i].x, game.snake_body[i].y);
 }
 
-void update_game() {
-  check_death();
+void draw_death_screen() {
+  terminal_clear_all();
+  terminal_set_pos(0, 0);
+  terminal_printf("You died\n");
+}
+
+int update_game() {
+  if (check_death())
+    return 0;
 
   game.last_pos.x = game.snake_body[game.snake_body_len - 1].x;
   game.last_pos.y = game.snake_body[game.snake_body_len - 1].y;
 
-  for (size_t i = game.snake_body_len - 1; i >= 1; i--) {
+  for (int i = game.snake_body_len - 1; i >= 1; i--) {
     game.snake_body[i].x = game.snake_body[i - 1].x;
     game.snake_body[i].y = game.snake_body[i - 1].y;
   }
@@ -90,15 +97,16 @@ void update_game() {
     game.apple.x = randrange(VGA_WIDTH);
     game.apple.y = randrange(VGA_HEIGHT);
   }
+
+  return 1;
 }
 
 void start_game() {
   game.direction = DIRECTION_DOWN;
   game.score = 0;
-  game.is_dead = 0;
 
-  size_t middle_x = VGA_WIDTH / 2;
-  size_t middle_y = VGA_HEIGHT / 2;
+  int middle_x = VGA_WIDTH / 2;
+  int middle_y = VGA_HEIGHT / 2;
 
   game.snake_body[0].x = middle_x;
   game.snake_body[0].y = middle_y;

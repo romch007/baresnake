@@ -10,7 +10,8 @@ enum direction {
 
 void start_game();
 void draw_game();
-void update_game();
+void draw_death_screen();
+int update_game();
 void change_direction(enum direction dir);
 
 #endif

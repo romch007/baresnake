@@ -59,6 +59,11 @@ void terminal_putchar(char c) {
   }
 }
 
+void terminal_set_pos(size_t x, size_t y) {
+  terminal_column = x;
+  terminal_row = y;
+}
+
 void terminal_write(const char* data, size_t size) {
   for (size_t i = 0; i < size; i++)
     terminal_putchar(data[i]);

@@ -23,8 +23,8 @@ enum vga_color {
   VGA_COLOR_WHITE = 15, 
 };
 
-static const size_t VGA_WIDTH = 80;
-static const size_t VGA_HEIGHT = 25;
+#define VGA_WIDTH 80
+#define VGA_HEIGHT 25
 
 static inline uint16_t vga_entry_color(enum vga_color fg, enum vga_color bg) {
   return fg | (bg << 4);
@@ -36,6 +36,7 @@ static inline uint16_t vga_entry(unsigned char uc, uint8_t color) {
 
 void terminal_init();
 void terminal_clear_all();
+void terminal_set_pos(size_t x, size_t y);
 void terminal_setcolor(uint8_t color);
 void terminal_putentryat(char c, uint8_t color, size_t x, size_t y);
 void terminal_putchar(char c);
