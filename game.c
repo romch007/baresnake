@@ -119,5 +119,13 @@ void start_game() {
 }
 
 void change_direction(enum direction dir) {
+  if ((game.direction == DIRECTION_UP && dir == DIRECTION_DOWN)
+   || (game.direction == DIRECTION_DOWN && dir == DIRECTION_UP)
+   || (game.direction == DIRECTION_LEFT && dir == DIRECTION_RIGHT)
+   || (game.direction == DIRECTION_RIGHT && dir == DIRECTION_LEFT)
+  ) {
+    return;
+  }
+
   game.direction = dir;
 }
