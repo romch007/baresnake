@@ -1,6 +1,7 @@
 #include "game.h"
 #include "vga.h"
 #include "random.h"
+#include "utils.h"
 
 #define MAX_BODY_LEN 20
 
@@ -48,6 +49,8 @@ static int check_death() {
 
 void draw_game() {
   terminal_clear_all();
+  terminal_set_pos(0, 0);
+  terminal_printf("Score: %d", game.score);
 
   // draw apple
   terminal_putentryat(APPLE_CHAR, APPLE_COLOR, game.apple.x, game.apple.y);
@@ -58,9 +61,14 @@ void draw_game() {
 }
 
 void draw_death_screen() {
+  char message[] = "You died!";
+
+  int middle_x = VGA_WIDTH / 2;
+  int middle_y = VGA_HEIGHT / 2;
+
   terminal_clear_all();
-  terminal_set_pos(0, 0);
-  terminal_printf("You died\n");
+  terminal_set_pos(middle_x - (sizeof(message) / 2), middle_y);
+  terminal_write(message, sizeof(message));
 }
 
 int update_game() {
