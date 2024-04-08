@@ -28,8 +28,7 @@ struct game_state {
 struct game_state game;
 
 static void grow_snake() {
-  game.snake_body[game.snake_body_len].x = game.last_pos.x;
-  game.snake_body[game.snake_body_len].y = game.last_pos.y;
+  game.snake_body[game.snake_body_len] = game.last_pos;
 
   game.snake_body_len++;
 }
@@ -75,12 +74,10 @@ int update_game() {
   if (check_death())
     return 0;
 
-  game.last_pos.x = game.snake_body[game.snake_body_len - 1].x;
-  game.last_pos.y = game.snake_body[game.snake_body_len - 1].y;
+  game.last_pos = game.snake_body[game.snake_body_len - 1];
 
   for (int i = game.snake_body_len - 1; i >= 1; i--) {
-    game.snake_body[i].x = game.snake_body[i - 1].x;
-    game.snake_body[i].y = game.snake_body[i - 1].y;
+    game.snake_body[i] = game.snake_body[i - 1];
   }
 
   switch (game.direction) {
