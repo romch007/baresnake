@@ -10,7 +10,7 @@ LDFLAGS += -nostdlib -T linker.ld -m elf_i386
 
 QEMU_ARGS +=
 
-OBJS = entry.o start.o vga.o utils.o gdt.o idt.o isr.o load_gdt.o load_idt.o port.o keyboard.o pic.o interrupt_wrapper.o game.o timer.o cmos.o
+OBJS = entry.o port.o interrupt_wrapper.o load_gdt.o load_idt.o start.o vga.o utils.o gdt.o idt.o isr.o keyboard.o pic.o game.o timer.o cmos.o
 OUT = baresnake.bin
 ISO = baresnake.iso
 
@@ -36,7 +36,7 @@ $(ISO): $(OUT)
 	mkdir -p isodir/boot/grub
 	cp $(OUT) isodir/boot/$(OUT)
 	cp grub.cfg isodir/boot/grub/grub.cfg
-	grub-mkrescue -o $(ISO) isodir
+	grub-mkrescue --product-name=baresnake -o $(ISO) isodir
 
 bochs: $(ISO)
 	bochs -q -f ./bochsrc

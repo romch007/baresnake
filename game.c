@@ -3,8 +3,6 @@
 #include "random.h"
 #include "utils.h"
 
-#define MAX_BODY_LEN 20
-
 #define SNAKE_BODY_CHAR '#'
 #define APPLE_CHAR '@'
 
@@ -16,7 +14,7 @@ struct point {
   int y;
 };
 
-struct point snake_body[MAX_BODY_LEN];
+struct point snake_body[VGA_WIDTH * VGA_HEIGHT];
 int snake_body_len;
 
 struct point apple;
