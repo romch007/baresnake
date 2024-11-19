@@ -9,6 +9,9 @@
 #define SNAKE_BODY_COLOR vga_entry_color(VGA_COLOR_GREEN, VGA_COLOR_BLACK)
 #define APPLE_COLOR vga_entry_color(VGA_COLOR_RED, VGA_COLOR_BLACK)
 
+#define MIDDLE_X (VGA_WIDTH / 2)
+#define MIDDLE_Y (VGA_HEIGHT / 2)
+
 struct point {
   int x;
   int y;
@@ -58,11 +61,8 @@ void draw_game() {
 void draw_death_screen() {
   char message[] = "You died!";
 
-  int middle_x = VGA_WIDTH / 2;
-  int middle_y = VGA_HEIGHT / 2;
-
   terminal_clear_all();
-  terminal_set_pos(middle_x - (sizeof(message) / 2), middle_y);
+  terminal_set_pos(MIDDLE_X - (sizeof(message) / 2), MIDDLE_Y);
   terminal_write(message, sizeof(message));
 }
 
@@ -106,11 +106,8 @@ void start_game() {
   direction = DIRECTION_DOWN;
   score = 0;
 
-  int middle_x = VGA_WIDTH / 2;
-  int middle_y = VGA_HEIGHT / 2;
-
-  snake_body[0].x = middle_x;
-  snake_body[0].y = middle_y;
+  snake_body[0].x = MIDDLE_X;
+  snake_body[0].y = MIDDLE_Y;
   snake_body_len = 1;
 
   apple.x = randrange(VGA_WIDTH);
