@@ -26,6 +26,8 @@ struct point last_pos;
 enum direction direction;
 int score;
 
+const char* death_message = "You died!";
+
 static void grow_snake() {
   snake_body[snake_body_len] = last_pos;
 
@@ -59,11 +61,9 @@ void draw_game() {
 }
 
 void draw_death_screen() {
-  char message[] = "You died!";
-
   terminal_clear_all();
-  terminal_set_pos(MIDDLE_X - (sizeof(message) / 2), MIDDLE_Y);
-  terminal_write(message, sizeof(message));
+  terminal_set_pos(MIDDLE_X - ((strlen(death_message) - 1) / 2), MIDDLE_Y);
+  terminal_write(death_message, strlen(death_message));
 }
 
 int update_game() {
