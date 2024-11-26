@@ -1,12 +1,11 @@
 CC ?= gcc
 AS ?= as
-LD ?= ld
 
 QEMU ?= qemu-system-i386
 
 ASFLAGS += --32
 CFLAGS += -Wall -Wextra -ffreestanding -fno-stack-protector -mno-sse -mno-mmx -mno-3dnow -mno-80387 -m32
-LDFLAGS += -nostdlib -T linker.ld -m elf_i386
+LDFLAGS += -nostdlib -T linker.ld -m32
 
 QEMU_ARGS +=
 
@@ -15,7 +14,7 @@ OUT = baresnake.bin
 ISO = baresnake.iso
 
 $(OUT): $(OBJS)
-	$(LD) $(LDFLAGS) $^ -o $@
+	$(CC) $(LDFLAGS) $^ -o $@
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
