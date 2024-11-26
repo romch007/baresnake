@@ -72,9 +72,8 @@ int update_game() {
 
   last_pos = snake_body[snake_body_len - 1];
 
-  for (int i = snake_body_len - 1; i >= 1; i--) {
+  for (int i = snake_body_len - 1; i >= 1; i--)
     snake_body[i] = snake_body[i - 1];
-  }
 
   switch (direction) {
     case DIRECTION_UP:
@@ -121,9 +120,8 @@ void change_direction(enum direction dir) {
    || (direction == DIRECTION_DOWN && dir == DIRECTION_UP)
    || (direction == DIRECTION_LEFT && dir == DIRECTION_RIGHT)
    || (direction == DIRECTION_RIGHT && dir == DIRECTION_LEFT)
-  ) {
+  )
     return;
-  }
 
   direction = dir;
 }
