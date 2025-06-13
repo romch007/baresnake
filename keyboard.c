@@ -4,6 +4,8 @@
 #include "vga.h"
 #include "game.h"
 
+#include <stdint.h>
+
 void keyboard_handler() {
   terminal_printf("keyboard pressed\n");
 }
